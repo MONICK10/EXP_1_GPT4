@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ex 1 · E-Commerce Chatbot · URK23CS1167</title>
+<link rel="stylesheet" href="/static/style.css">
+<style>:root { --accent: #ea580c; --accent-soft: #fff7ed; }</style>
+</head>
+<body>
+{% include "_header.html" %}
+<main class="layout">
+  <section>
+    <div class="card" id="card-datasets">
+      <h2>Knowledge Base <span class="module-tag">RAG data</span></h2>
+      <p class="hint">Data the chatbot retrieves from before answering.</p>
+      <div class="kv">
+        <div>Products</div><div>{{ n_products }} items (recommendation, product Q&amp;A)</div>
+        <div>FAQs</div><div>{{ n_faqs }} questions (semantic search)</div>
+        <div>Reviews</div><div>{{ n_reviews }} reviews (sentiment analysis)</div>
+        <div>Embeddings</div><div>{{ embed_method }}</div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Try a question</h2>
+      <p class="hint">Click a sample. The Intent Module picks the right module.</p>
+      <label>FAQ Module</label>
+      <div class="chips">
+        <button class="chip" data-q="Where is my parcel? I want to track it">Where is my parcel?</button>
+        <button class="chip" data-q="How can I return my order?">How can I return my order?</button>
+      </div>
+      <label>Recommendation Module</label>
+      <div class="chips">
+        <button class="chip" data-q="Recommend a gaming laptop under 80000">Gaming laptop under 80000</button>
+        <button class="chip" data-q="Suggest noise cancelling headphones for travel">ANC headphones</button>
+      </div>
+      <label>Product Module</label>
+      <div class="chips">
+        <button class="chip" data-q="Is the Samsung Galaxy S24 waterproof?">Is Galaxy S24 waterproof?</button>
+        <button class="chip" data-q="What is the battery life of MacBook Air M3?">MacBook Air battery?</button>
+      </div>
+      <label>Review Module</label>
+      <div class="chips">
+        <button class="chip" data-q="What do customers think about the OnePlus Nord CE 4?">Reviews: OnePlus Nord CE 4</button>
+        <button class="chip" data-q="Show reviews of Sony WH-1000XM5">Reviews: Sony XM5</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="card" id="card-chat">
+      <h2>Chat with ShopSmart AI <span class="module-tag">Chatbot</span></h2>
+      <div class="chat" id="chat">
+        <div class="msg bot"><div class="meta"><b>ShopSmart AI</b></div>
+          Hi! I can answer FAQs, recommend products, answer product questions and summarise reviews. How can I help?</div>
+      </div>
+      <form class="chat-input" id="chat-form">
+        <input id="msg" placeholder="Ask about orders, products, recommendations or reviews..." autocomplete="off">
+        <button id="send">Send</button>
+      </form>
+    </div>
+    <div class="card hidden" id="card-intent">
+      <h2>Intent Detection &amp; Retrieved Context <span class="module-tag">Intent Module</span></h2>
+      <div class="out"></div>
+    </div>
+  </section>
+</main>
+<footer>Monick S · URK23CS1167 · Karunya Institute of Technology and Sciences</footer>
+<script src="/static/ui.js"></script>
+<script>
+const chat = $("#chat");
+const INTENT_LABEL = { FAQ: "FAQ", RECOMMENDATION: "Recommendation", PRODUCT_QA: "Product Q&A", REVIEW: "Review" };
+
+function addMsg(html, who) {
+  const d = document.createElement("div");
+  d.className = "msg " + who;
+  d.innerHTML = html;
+  chat.appendChild(d);
+  chat.scrollTop = chat.scrollHeight;
+  return d;
+}
+
+function contextHtml(r) {
+  const c = r.context, i = r.intent;
+  let h = `<div class="kv">
+    <div>User query</div><div>${esc(r.query)}</div>
+    <div>Detected intent</div><div><span class="badge">${INTENT_LABEL[i.intent]}</span> <small>(${esc(i.source)})</small></div>
+    <div>Reason</div><div>${esc(i.reason)}</div>
+    <div>Routed to</div><div><b>${esc(r.module)}</b></div></div><br>`;
+  if (c.type === "faq") {
+    h += `<b>Top FAQ matches</b> <small>(${esc(c.method)}, cosine similarity)</small>` +
+      table(c.items, [["question", "FAQ question"], ["score", "Similarity", (x) => `<div class="bar"><span style="width:${Math.max(0, x.score) * 100}%"></span></div>${x.score}`]]);
+  } else if (c.type === "products") {
+    h += `<b>Top-3 products</b> <small>(${esc(c.method || "")}${c.category ? ", category: " + c.category : ""}${c.budget ? ", budget ≤ Rs. " + c.budget : ""})</small>` +
+      table(c.items, [["product_name", "Product"], ["brand", "Brand"], ["price", "Price (Rs.)"], ["score", "TF-IDF score"]]);
+  } else if (c.type === "product") {
+    h += `<b>Retrieved product</b> <small>(match score ${c.score})</small>` +
+      table(c.items, [["product_name", "Product"], ["price", "Price (Rs.)"], ["description", "Details"]]);
+  } else if (c.type === "reviews" && c.items.length) {
+    const cnt = c.counts;
+    h += `<b>Sentiment of ${c.items.length} reviews – ${esc(c.product)}</b> (avg rating ${c.avg_rating}★)<br>
+      <span class="badge pos">Positive ${cnt.Positive || 0}</span> <span class="badge neg">Negative ${cnt.Negative || 0}</span>
+      <span class="badge neu">Neutral ${cnt.Neutral || 0}</span><br><br>` +
+      table(c.items, [["review", "Review"], ["rating", "Rating"],
+        ["sentiment", "Sentiment", (x) => `<span class="badge ${x.sentiment.slice(0, 3).toLowerCase()}">${x.sentiment}</span>`]]);
+  }
+  return h;
+}
+
+async function send(text) {
+  if (!text) return;
+  addMsg(esc(text), "user");
+  $("#msg").value = "";
+  const wait = addMsg('<span class="meta">Thinking...</span>', "bot");
+  await withLoading($("#send"), async () => {
+    try {
+      const r = await api("/api/chat", { message: text });
+      wait.innerHTML = `<div class="meta"><b>ShopSmart AI</b> · <span class="badge">${INTENT_LABEL[r.intent.intent]}</span> · ${esc(r.module)}</div>${md(r.answer)}`;
+      showCard("card-intent", contextHtml(r));
+      chat.scrollTop = chat.scrollHeight;
+    } catch (e) { wait.innerHTML = `<span style="color:var(--bad)">${esc(e.message)}</span>`; }
+  });
+}
+$("#chat-form").addEventListener("submit", (e) => { e.preventDefault(); send($("#msg").value.trim()); });
+document.querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => send(c.dataset.q)));
+</script>
+</body>
+</html>

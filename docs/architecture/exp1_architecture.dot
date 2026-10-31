@@ -1,0 +1,20 @@
+digraph G {
+  graph [rankdir=TB, fontname="Helvetica", fontsize=11, nodesep=0.35, ranksep=0.42, pad=0.25, bgcolor="white", splines=spline];
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11, fillcolor="#ffffff", color="#334155", penwidth=1.2, margin="0.18,0.07"];
+  edge [color="#475569", arrowsize=0.7, penwidth=1.1, fontname="Helvetica", fontsize=10];
+user [label="Customer", shape=oval, fillcolor="#e2e8f0"];
+llm [label="Ollama (Local LLM Server)\nLlama 3.2", shape=box3d, fillcolor="#fde68a"];
+
+ui [label="Web Chat Interface (Flask + HTML/JS)", fillcolor="#ffedd5"];
+intent [label="Intent Module\n(LLM intent classifier)", fillcolor="#fed7aa"];
+subgraph cluster_m { label="Modules"; style="rounded,dashed"; color="#94a3b8"; fontname="Helvetica";
+  faq [label="FAQ Module\nEmbeddings + Cosine"]; rec [label="Recommendation Module\nTF-IDF Top-3"];
+  prod [label="Product Module\nProduct RAG"]; rev [label="Review Module\nSentiment + Summary"]; }
+subgraph cluster_d { label="Datasets (CSV)"; style="rounded"; color="#94a3b8"; fontname="Helvetica";
+  dfaq [label="faqs.csv", shape=cylinder, fillcolor="#dbeafe"]; dprod [label="products.csv", shape=cylinder, fillcolor="#dbeafe"]; drev [label="reviews.csv", shape=cylinder, fillcolor="#dbeafe"]; }
+resp [label="Chatbot Response + Retrieved Context", fillcolor="#dcfce7"];
+user -> ui -> intent; intent -> faq; intent -> rec; intent -> prod; intent -> rev;
+dfaq -> faq; dprod -> rec; dprod -> prod; drev -> rev;
+faq -> llm; rec -> llm; prod -> llm; rev -> llm; intent -> llm [style=dashed];
+llm -> resp; resp -> ui [style=dashed, label=" display"];
+}

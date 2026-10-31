@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+videos/_tmp/
+saved/*
+!saved/.gitkeep
+saved_blogs/*
+!saved_blogs/.gitkeep
+uploads/*
+!uploads/.gitkeep
+*.webm

@@ -1,0 +1,38 @@
+product_id,product_name,review,rating
+P101,ASUS ROG Strix G16,"Excellent gaming performance, runs every AAA game on ultra settings.",5
+P101,ASUS ROG Strix G16,"The display is super smooth and colours are great.",5
+P101,ASUS ROG Strix G16,"Gets quite hot and fans are loud under heavy load.",3
+P101,ASUS ROG Strix G16,"Battery backup is poor while gaming, only around 2 hours.",2
+P102,Lenovo LOQ 15,"Best value gaming laptop for students. Good performance for the price.",5
+P102,Lenovo LOQ 15,"Build quality is decent and keyboard is comfortable.",4
+P102,Lenovo LOQ 15,"Speakers are average and battery life is just okay.",3
+P102,Lenovo LOQ 15,"Runs Valorant and GTA V smoothly, very happy.",5
+P103,Apple MacBook Air M3,"Amazing battery life, easily lasts a full day of college.",5
+P103,Apple MacBook Air M3,"Very light, silent and fast. Excellent display.",5
+P103,Apple MacBook Air M3,"8GB RAM feels limited for heavy multitasking, and it is expensive.",3
+P201,Samsung Galaxy S24,"Camera quality is excellent, especially in daylight.",5
+P201,Samsung Galaxy S24,"Compact and premium feel. Galaxy AI features are useful.",4
+P201,Samsung Galaxy S24,"Battery drains fast with heavy use, disappointed.",2
+P202,Apple iPhone 15,"Smooth performance and great camera. Love USB-C.",5
+P202,Apple iPhone 15,"Display is only 60Hz at this price, that is bad.",2
+P202,Apple iPhone 15,"Battery life is good for a full day.",4
+P203,OnePlus Nord CE 4,"Charging is insanely fast, full charge in 30 minutes.",5
+P203,OnePlus Nord CE 4,"Battery backup is excellent, lasts nearly two days.",5
+P203,OnePlus Nord CE 4,"Camera is average in low light.",3
+P203,OnePlus Nord CE 4,"Display is good, smooth for daily use.",4
+P204,Redmi Note 13 Pro,"200MP camera takes very detailed photos.",5
+P204,Redmi Note 13 Pro,"Too many pre-installed apps and ads, annoying.",2
+P204,Redmi Note 13 Pro,"Good display and decent performance for the price.",4
+P301,Sony WH-1000XM5,"Noise cancellation is the best I have ever used.",5
+P301,Sony WH-1000XM5,"Very comfortable for long flights, sound is excellent.",5
+P301,Sony WH-1000XM5,"Expensive and the case is bulky.",3
+P302,boAt Rockerz 450,"Great sound for the price, good bass.",4
+P302,boAt Rockerz 450,"Ear cushions start hurting after an hour.",2
+P302,boAt Rockerz 450,"Battery lasts long, value for money.",4
+P303,Apple AirPods Pro 2,"ANC is excellent and they pair instantly with iPhone.",5
+P303,Apple AirPods Pro 2,"Very costly but worth it for Apple users.",4
+P402,Noise ColorFit Pro 5,"Good watch for the price, display is bright.",4
+P402,Noise ColorFit Pro 5,"Step counting is not accurate.",2
+P503,Sony PlayStation 5 Slim,"Graphics are stunning and loading is super fast.",5
+P503,Sony PlayStation 5 Slim,"DualSense controller haptics are amazing.",5
+P503,Sony PlayStation 5 Slim,"Games are very expensive.",3
