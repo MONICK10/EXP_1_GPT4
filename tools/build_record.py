@@ -45,6 +45,8 @@ sCap = ParagraphStyle("cap", fontName="Times-Italic", fontSize=10.5, leading=13,
 sCell = ParagraphStyle("cell", fontName="Times-Roman", fontSize=11, leading=14)
 sCellB = ParagraphStyle("cellb", fontName="Times-Bold", fontSize=11, leading=14)
 sLink = ParagraphStyle("link", **BASE)
+# header-block GitHub row: smaller so a long repo URL stays on one line
+sGh = ParagraphStyle("gh", fontName="Times-Roman", fontSize=10.5, leading=13, alignment=TA_CENTER)
 
 
 def P(text, style=sN):
@@ -184,11 +186,17 @@ def nice(name):
 def experiment(e, versions):
     n = e["no"]
     date = CFG["dates"][str(n)]
+    repo = CFG["github_repo"].rstrip("/")
+    gh = repo if CFG.get("exp_no") else f"{repo}/tree/main/{e['folder']}"
+    # third row of the header block: the repository this experiment lives in
+    gh_cell = P(f"<b>GitHub Link:</b> <link href='{gh}' color='blue'>{gh}</link>", sGh)
     head = Table([[P(f"<b>Ex. No.:{n}</b>", sC), P(f"<b>{e['short']}</b>", sC), P(f"<b>{CFG['register_number']}</b>", sC)],
-                  [P(f"<b>{date}</b>", sC), "", ""]],
-                 colWidths=[3 * cm, 9.6 * cm, 3.8 * cm], rowHeights=[0.9 * cm, 0.9 * cm])
+                  [P(f"<b>{date}</b>", sC), "", ""],
+                  [gh_cell, "", ""]],
+                 colWidths=[3 * cm, 9.6 * cm, 3.8 * cm], rowHeights=[0.9 * cm, 0.9 * cm, 0.9 * cm])
     head.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), 0.8, colors.black), ("SPAN", (1, 0), (1, 1)),
-                              ("SPAN", (2, 0), (2, 1)), ("VALIGN", (0, 0), (-1, -1), "MIDDLE")]))
+                              ("SPAN", (2, 0), (2, 1)), ("SPAN", (0, 2), (2, 2)),
+                              ("VALIGN", (0, 0), (-1, -1), "MIDDLE")]))
     f = [Spacer(1, 0.2 * cm), head, Spacer(1, 0.3 * cm),
          P("Aim:", sH), P(e["aim"]), P("Problem Statement:", sH), P(e["problem"]),
          P("Software Requirements:", sH)]
@@ -200,8 +208,6 @@ def experiment(e, versions):
     f += [CondPageBreak(9 * cm), P("System Architecture:", sH), fit_image(arch, CONTENT_W - 0.6 * cm, 15 * cm),
           P(f"Fig. {n}.1 System architecture", sCap),
           P("Module Design:", sH), grid_table(("Module", "Responsibility"), e["modules"], [4.6 * cm, 11.2 * cm])]
-    repo = CFG["github_repo"].rstrip("/")
-    gh = repo if CFG.get("exp_no") else f"{repo}/tree/main/{e['folder']}"
     li = CFG["linkedin"].get(str(n)) or "&lt;add LinkedIn post link in config.json&gt;"
     f += [P("Implementation:", sH),
           P(f"&bull; GitHub Link - <link href='{gh}' color='blue'>{gh}</link>", sLink),

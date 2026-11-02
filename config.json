@@ -1,27 +1,27 @@
 {
-  "exp_no": 1,
-  "name": "Monick S",
-  "register_number": "URK23CS1167",
-  "course_code": "24CS2506",
-  "course_name": "Building Applications using GPT-4",
-  "academic_year": "2026-2027",
-  "semester": "ODD SEMESTER",
-  "record_month": "NOVEMBER 2026",
-  "exam_date": "",
-  "llm_model": "Llama 3.2 (3B) via Ollama",
-  "versions_fallback": {
-    "Python": "3.13.5",
-    "Ollama": "0.6.2",
-    "VS Code": "1.133.0",
-    "Pandas": "2.3.3",
-    "Sentence Transformers": "5.7.0",
-    "Flask": "3.1.0"
-  },
-  "github_repo": "https://github.com/MONICK10/GPT4-Exp1-ECommerce-Chatbot",
-  "dates": {
-    "1": "06.08.2026"
-  },
-  "linkedin": {
-    "1": ""
-  }
+    "exp_no":  1,
+    "name":  "Monick S",
+    "register_number":  "URK23CS1167",
+    "course_code":  "24CS2506",
+    "course_name":  "Building Applications using GPT-4",
+    "academic_year":  "2026-2027",
+    "semester":  "ODD SEMESTER",
+    "record_month":  "NOVEMBER 2026",
+    "exam_date":  "",
+    "llm_model":  "Llama 3.2 (3B) via Ollama",
+    "versions_fallback":  {
+                              "Python":  "3.13.5",
+                              "Ollama":  "0.6.2",
+                              "VS Code":  "1.133.0",
+                              "Pandas":  "2.3.3",
+                              "Sentence Transformers":  "5.7.0",
+                              "Flask":  "3.1.0"
+                          },
+    "github_repo":  "https://github.com/MONICK10/EXP_1_GPT4",
+    "dates":  {
+                  "1":  "06.08.2026"
+              },
+    "linkedin":  {
+                     "1":  ""
+                 }
 }
