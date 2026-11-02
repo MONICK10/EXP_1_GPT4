@@ -90,7 +90,7 @@ function contextHtml(r) {
     h += `<b>Top FAQ matches</b> <small>(${esc(c.method)}, cosine similarity)</small>` +
       table(c.items, [["question", "FAQ question"], ["score", "Similarity", (x) => `<div class="bar"><span style="width:${Math.max(0, x.score) * 100}%"></span></div>${x.score}`]]);
   } else if (c.type === "products") {
-    h += `<b>Top-3 products</b> <small>(${esc(c.method || "")}${c.category ? ", category: " + c.category : ""}${c.budget ? ", budget ≤ Rs. " + c.budget : ""})</small>` +
+    h += `<b>Top ${c.items.length} matching products</b> <small>(${esc(c.method || "")}${c.category ? ", category: " + c.category : ""}${c.budget ? ", budget ≤ Rs. " + c.budget : ""})</small>` +
       table(c.items, [["product_name", "Product"], ["brand", "Brand"], ["price", "Price (Rs.)"], ["score", "TF-IDF score"]]);
   } else if (c.type === "product") {
     h += `<b>Retrieved product</b> <small>(match score ${c.score})</small>` +

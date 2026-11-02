@@ -38,6 +38,10 @@ def ask(prompt, system=None, temperature=0.3, json_mode=False, timeout=600):
         r = requests.post(f"{OLLAMA_URL}/api/generate", json=payload, timeout=timeout)
     except requests.exceptions.ConnectionError:
         raise LLMError("Ollama is not running. Start it with:  ollama serve")
+    except requests.exceptions.Timeout:
+        raise LLMError(f"Ollama did not answer within {timeout} seconds. It may be busy with another "
+                       "request, or the model is too large for this laptop. Try a smaller model:  "
+                       'ollama pull llama3.2:1b  then  $env:OLLAMA_MODEL="llama3.2:1b"')
     if r.status_code == 404:
         raise LLMError(f"Model '{MODEL}' not found. Run:  ollama pull {MODEL}")
     r.raise_for_status()

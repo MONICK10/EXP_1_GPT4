@@ -49,6 +49,8 @@ function md(text) {
     const l = raw.trim();
     let m;
     if (!l) { close(); continue; }
+    // a line of only ===, --- or ___ is a markdown rule / heading underline: don't print it literally
+    if (/^[=\-_*]{3,}$/.test(l)) { close(); continue; }
     if ((m = l.match(/^#{1,6}\s+(.*)/))) { close(); html += `<h3>${inline(m[1])}</h3>`; }
     else if ((m = l.match(/^[-*•]\s+(.*)/))) { if (list !== "ul") { close(); html += "<ul>"; list = "ul"; } html += `<li>${inline(m[1])}</li>`; }
     else if ((m = l.match(/^\d+[.)]\s+(.*)/))) { if (list !== "ol") { close(); html += "<ol>"; list = "ol"; } html += `<li>${inline(m[1])}</li>`; }

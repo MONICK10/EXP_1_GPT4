@@ -12,7 +12,9 @@ class FAQModule:
     def __init__(self, path):
         self.df = pd.read_csv(path)
         # index question + answer so more words can match
-        self.index = SemanticIndex((self.df["question"] + " " + self.df["answer"]).tolist())
+        self.index = SemanticIndex(self.df["question"].tolist())
+        if self.index.model is None:  # TF-IDF backup needs more words
+            self.index = SemanticIndex((self.df["question"] + " " + self.df["answer"]).tolist())
         # TF-IDF scores are lower than embedding scores, so use a lower cut-off
         self.threshold = 0.35 if self.index.model is not None else 0.15
 

@@ -26,8 +26,10 @@ class ProductModule:
         info = (f"Name: {p.product_name}\nBrand: {p.brand}\nCategory: {p.category}\n"
                 f"Price: Rs. {p.price}\nDescription: {p.description}")
         prompt = (f"Product information:\n{info}\n\nCustomer question: {query}\n\n"
-                  "Answer in 2-4 sentences using ONLY the product information. "
-                  "If the information is not available, say so honestly.")
+                  "Answer the question directly in 2-4 sentences using ONLY the product information above. "
+                  "If the information above answers the question, state it confidently and do not add doubts "
+                  "or say that details are missing. Only if the detail is truly absent from the information, "
+                  "say that it is not listed.")
         return {"answer": ask(prompt),
                 "context": {"type": "product", "score": score,
                             "items": [{"product_id": p.product_id, "product_name": p.product_name,

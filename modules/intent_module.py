@@ -9,15 +9,33 @@ from llm import LLMError, ask_json
 
 INTENTS = ["FAQ", "RECOMMENDATION", "PRODUCT_QA", "REVIEW"]
 
-PROMPT = """Classify the e-commerce customer message into exactly one intent:
-FAQ            - orders, delivery, returns, refunds, payment, cancellation, warranty, support
-RECOMMENDATION - wants a product suggestion (recommend, suggest, best, which should I buy, under budget)
-PRODUCT_QA     - asks a specific fact about a named product (price, specs, waterproof, battery, camera)
-REVIEW         - asks what customers think, reviews, ratings, opinions, pros and cons
+PROMPT = """Classify the e-commerce customer message into exactly one intent.
+
+FAQ            - store policy or the customer's own order: delivery, returns, refunds, payment,
+                 cancellation, warranty, tracking, support.
+RECOMMENDATION - wants the store to suggest a product: recommend, suggest, best, which should I buy,
+                 looking for, under a budget.
+PRODUCT_QA     - asks a factual specification of one named product: price, storage, battery hours,
+                 camera megapixels, waterproof rating, processor.
+REVIEW         - asks about other customers' experience of a product: reviews, ratings, opinions,
+                 feedback, pros and cons, "what do people say".
+
+Rule: if the message contains the word review, rating, opinion, feedback, pros or cons, the intent is
+REVIEW even when a product is named. Only use PRODUCT_QA when a specification is asked for.
+
+Examples:
+"Where is my parcel? I want to track it"            -> FAQ
+"Recommend a gaming laptop under 80000"             -> RECOMMENDATION
+"Is the Samsung Galaxy S24 waterproof?"             -> PRODUCT_QA
+"Show reviews of Sony WH-1000XM5"                   -> REVIEW
+"What do customers think about the Pixel 8a?"       -> REVIEW
+"What is the battery life of MacBook Air M3?"       -> PRODUCT_QA
 
 Message: "{q}"
 
-Return JSON: {{"intent": "<one of FAQ, RECOMMENDATION, PRODUCT_QA, REVIEW>", "reason": "<short reason>"}}"""
+Return JSON: {{"intent": "<one of FAQ, RECOMMENDATION, PRODUCT_QA, REVIEW>",
+"reason": "<why THIS message fits that intent, max 12 words. Describe the message itself.
+Do not copy the rules or the intent descriptions above.>"}}"""
 
 
 def keyword_intent(q):
